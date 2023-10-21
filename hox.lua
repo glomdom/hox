@@ -74,21 +74,6 @@ local program = {
     dump()
 }
 
--- general debug of program
--- for _, v in next, program do
---     if v[1] == OP_PUSH then
---         print("push: " .. v[2])
---     elseif v[1] == OP_PLUS then
---         print("plus")
---     elseif v[1] == OP_MINUS then
---         print("minus")
---     elseif v[1] == OP_DUMP then
---         print("dump")
---     else
---         print(v)
---     end
--- end
-
 local function compile_program(program, out_file_path)
     local out = io.open(out_file_path, "w")
 
@@ -140,24 +125,18 @@ local function compile_program(program, out_file_path)
         if op[1] == OP_PUSH then
             out:write(("    push %d\n"):format(op[2]))
         elseif op[1] == OP_PLUS then
-            out:write("; begin plus\n")
             out:write("    pop rax\n")
             out:write("    pop rbx\n")
             out:write("    add rax, rbx\n")
             out:write("    push rax\n")
-            out:write("; end plus\n")
         elseif op[1] == OP_MINUS then
-            out:write("; begin minus\n")
             out:write("    pop rax\n")
             out:write("    pop rbx\n")
             out:write("    sub rbx, rax\n")
             out:write("    push rbx\n")
-            out:write("; end minus\n")
         elseif op[1] == OP_DUMP then
-            out:write("; begin dump\n")
             out:write("    pop rdi\n")
             out:write("    call dump\n")
-            out:write("; end dump\n")
         end
     end
 
